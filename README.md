@@ -20,6 +20,8 @@ The team reviewed Q1 goals, hiring, and budget; engineering priorities are next 
 
 ## Install
 
+(Note: The first build hasn't been pushed to npm, so this won't work, you'll need to use the develop path for now.)
+
 ```bash
 npm i -g @mikelovesrobots/jig
 jig init
