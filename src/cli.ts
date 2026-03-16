@@ -6,7 +6,7 @@ import * as readline from 'readline';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { loadCommands } from './commands/loader';
-import { runCommand } from './commands/run';
+import { runCommandStream } from './commands/run';
 import { getJigDir, getEnvPath, isConfigured, loadEnv } from './config';
 import type { CommandDef } from './commands/types';
 
@@ -135,9 +135,12 @@ async function handleCommand(commandName: string, cmd: CommandDef, argv: Record<
   }
   try {
     const input = await readInput(argv);
-    const result = await runCommand(cmd, argv, input, env);
-    process.stdout.write(result.text);
-    if (result.text && !result.text.endsWith('\n')) process.stdout.write('\n');
+    let full = '';
+    for await (const chunk of runCommandStream(cmd, argv, input, env)) {
+      full += chunk;
+      process.stdout.write(chunk);
+    }
+    if (full && !full.endsWith('\n')) process.stdout.write('\n');
     process.exit(0);
   } catch (err) {
     console.error(err instanceof Error ? err.message : err);
