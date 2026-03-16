@@ -56,7 +56,48 @@ npm i -g @mikelovesrobots/jig
 
 Bundled commands: **rate** (score input on a metric), **decimate** (shorten to a percentage of length), **grammar-fix** (fix worst N% of grammar errors). Input is read from stdin unless you pass `--input-file <path>`.
 
-User-defined commands: add `.yaml` files under `~/.jig/commands/`. Same format as the bundled commands (YAML frontmatter + prompt body).
+## Creating commands
+
+Add a `.yaml` file under **`~/.jig/commands/`** (that directory is created when you run `jig init`). Each file is one command.
+
+**File format:** YAML frontmatter between `---` lines, then the prompt body.
+
+**Frontmatter:**
+
+- **`name`** – Command name (e.g. `summarize`). If omitted, the filename (without `.yaml`) is used.
+- **`description`** – Shown in `jig --help` and `jig <command> --help`.
+- **`args`** – List of options. Each item can have:
+  - **`name`** – Option name (e.g. `max`, `metric`). Becomes `--max`, `--metric`.
+  - **`type`** – One of `string`, `number`, `boolean`, `file`.
+  - **`default`** – (optional) Default value.
+  - **`description`** – (optional) Shown in `jig <command> --help`.
+
+**Prompt body:** Mustache template. You get:
+
+- **`{{input}}`** – Content from stdin or `--input-file`. Always available.
+- **`{{explain}}`** – `true` when the user passed `--explain`; you can use it to ask for reasoning in the prompt.
+- Any **`{{name}}`** for each arg – Filled from the user’s options or the arg’s default.
+
+Every command automatically gets **`--explain`** and **`--input-file`**; you don’t need to declare them in `args` unless you want a custom description.
+
+**Example** – `~/.jig/commands/summarize.yaml`:
+
+```yaml
+---
+name: summarize
+description: Summarize the input in one short paragraph.
+args:
+  - name: style
+    type: string
+    default: neutral
+    description: Tone (e.g. neutral, casual, formal)
+---
+Summarize the following in one short paragraph. Use a {{style}} tone.
+
+{{input}}
+```
+
+Then: `echo "Long article..." | jig summarize` or `jig summarize --style formal --input-file doc.txt`.
 
 ## Config
 
