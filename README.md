@@ -37,6 +37,20 @@ jig init
 
 Bundled commands: **rate** (score input on a metric), **decimate** (shorten by percentage), **grammar-fix** (fix grammar). Input from stdin, or `--input-file <path>`.
 
+Because input is stdin, you can combine jig with normal shell tools. For example, rate every resume in a folder and get filename + score (Don't do this though cause it's unethical):
+
+```bash
+for f in resumes/*.md; do printf '%s: ' "$f"; cat "$f" | jig rate --max 5 --metric "ruby on rails"; done
+```
+
+Output:
+
+```
+resumes/alice.md: 4
+resumes/bob.md: 2
+resumes/carol.md: 5
+```
+
 ## Custom commands
 
 Add a `.yaml` file under `~/.jig/commands/`. YAML frontmatter between `---` lines, then the prompt body as a Mustache template.
