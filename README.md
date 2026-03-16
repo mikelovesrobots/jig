@@ -1,6 +1,22 @@
 # jig
 
+## Synopsis
+
 CLI for LLM tasks via prompts and pipes. Uses OpenRouter as the provider.
+
+```bash
+$ cat RESUME.md | jig rate --max 5 --metric "ruby on rails"
+4
+
+$ echo "The meeting covered Q1 goals, the new hire pipeline, and the budget review. Next week we'll dig into engineering priorities." | jig decimate --percent 50
+The meeting covered Q1 goals and the budget review.
+
+$ echo "Me and him went to the store and we was looking for a new laptop." | jig grammar-fix --percent 100
+He and I went to the store and we were looking for a new laptop.
+
+$ jig summarize --input-file meeting-notes.txt
+The team reviewed Q1 goals, hiring, and budget; engineering priorities are next week.
+```
 
 ## Install (use the published CLI)
 
