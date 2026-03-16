@@ -1,0 +1,38 @@
+{
+  "name": "@mikelovesrobots/jig",
+  "version": "0.1.0",
+  "description": "CLI for LLM tasks via prompts and pipes (OpenRouter)",
+  "bin": {
+    "jig": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "commands"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/test/*.js"
+  },
+  "keywords": [
+    "cli",
+    "llm",
+    "openrouter",
+    "prompts"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "mustache": "^4.2.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.5",
+    "@types/node": "^20.10.0",
+    "@types/yargs": "^17.0.35",
+    "typescript": "^5.3.0"
+  }
+}

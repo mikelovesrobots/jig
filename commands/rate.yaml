@@ -1,0 +1,25 @@
+---
+name: rate
+description: Rate the input on a metric from min to max. Output only the number (or number + explanation if --explain).
+args:
+  - name: min
+    type: number
+    default: 1
+    description: Minimum score
+  - name: max
+    type: number
+    default: 5
+    description: Maximum score
+  - name: metric
+    type: string
+    default: quality
+    description: What to rate on
+  - name: input-file
+    type: file
+    description: Read from file instead of stdin
+---
+Rate the following content from {{min}} to {{max}} on the metric "{{metric}}".
+Output only a single number in that range.
+
+Content to rate:
+{{input}}
