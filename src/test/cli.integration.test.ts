@@ -59,6 +59,8 @@ describe('CLI integration', () => {
       assert(stdout.includes('jig'), 'should mention jig');
       assert(stdout.includes('init'), 'should list init');
       assert(stdout.includes('rate'), 'should list rate');
+      assert(stdout.includes('decimate'), 'should list decimate');
+      assert(stdout.includes('grammar-fix'), 'should list grammar-fix');
     });
 
     it('exits 0 for -h', () => {
@@ -90,6 +92,26 @@ describe('CLI integration', () => {
     });
   });
 
+  describe('jig decimate --help', () => {
+    it('exits 0 and prints decimate options', () => {
+      const { status, stdout } = runJig(['decimate', '--help'], { env });
+      assert.strictEqual(status, 0);
+      assert(stdout.includes('decimate'), 'should describe decimate');
+      assert(stdout.includes('--percent'), 'should show --percent');
+      assert(stdout.includes('--input-file'), 'should show --input-file');
+    });
+  });
+
+  describe('jig grammar-fix --help', () => {
+    it('exits 0 and prints grammar-fix options', () => {
+      const { status, stdout } = runJig(['grammar-fix', '--help'], { env });
+      assert.strictEqual(status, 0);
+      assert(stdout.includes('grammar-fix'), 'should describe grammar-fix');
+      assert(stdout.includes('--percent'), 'should show --percent');
+      assert(stdout.includes('--input-file'), 'should show --input-file');
+    });
+  });
+
   describe('jig rate (not configured)', () => {
     it('exits 1 and tells user to run jig init', () => {
       const { status, stderr } = runJig(['rate'], { env });
@@ -107,20 +129,37 @@ describe('CLI integration', () => {
     });
   });
 
-  describe('jig init and configured state', () => {
-    it('when .jig/env exists with both keys, jig rate exits 0 with not-implemented message', () => {
+  describe('jig rate (configured)', () => {
+    it('when .jig/env exists with both keys, jig rate runs and calls API (fake key yields 401)', () => {
       const jigDir = path.join(tempDir, '.jig');
       const envPath = path.join(jigDir, 'env');
       const commandsDir = path.join(jigDir, 'commands');
       fs.mkdirSync(commandsDir, { recursive: true });
       fs.writeFileSync(
         envPath,
-        'JIG_MODEL=openai/gpt-4o\nOPENROUTER_API_KEY=sk-x\n',
+        'JIG_MODEL=openai/gpt-4o\nOPENROUTER_API_KEY=sk-fake\n',
         'utf-8'
       );
-      const { status, stderr } = runJig(['rate'], { env });
-      assert.strictEqual(status, 0, 'rate should exit 0 when configured');
-      assert(stderr.includes('not implemented') || stderr.includes('Milestone 2'), 'should say not implemented yet');
+      const { status, stderr } = runJig(['rate'], { env, input: 'Sample input to rate.' });
+      assert.strictEqual(status, 1, 'rate with invalid key should exit 1');
+      assert(
+        stderr.includes('OpenRouter') || stderr.includes('401') || stderr.includes('Unauthorized') || stderr.includes('error'),
+        'should report API error'
+      );
+      assert(!stderr.includes('not implemented') && !stderr.includes('Milestone 2'), 'should no longer say not implemented');
+    });
+
+    it('reads input from --input-file when provided', () => {
+      const jigDir = path.join(tempDir, '.jig');
+      const envPath = path.join(jigDir, 'env');
+      const commandsDir = path.join(jigDir, 'commands');
+      fs.mkdirSync(commandsDir, { recursive: true });
+      fs.writeFileSync(envPath, 'JIG_MODEL=openai/gpt-4o\nOPENROUTER_API_KEY=sk-fake\n', 'utf-8');
+      const inputFile = path.join(tempDir, 'input.txt');
+      fs.writeFileSync(inputFile, 'Content from file.', 'utf-8');
+      const { status, stderr } = runJig(['rate', '--input-file', inputFile], { env });
+      assert.strictEqual(status, 1, 'should exit 1 on API error');
+      assert(stderr.includes('OpenRouter') || stderr.includes('401') || stderr.includes('error'), 'should attempt API call');
     });
   });
 

@@ -6,7 +6,8 @@ import * as readline from 'readline';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { loadCommands } from './commands/loader';
-import { getJigDir, getEnvPath, isConfigured } from './config';
+import { runCommand } from './commands/run';
+import { getJigDir, getEnvPath, isConfigured, loadEnv } from './config';
 import type { CommandDef } from './commands/types';
 
 const NOT_CONFIGURED_MESSAGE =
@@ -84,7 +85,7 @@ function buildYargs(): yargs.Argv {
       name,
       cmd.description,
       (yargsInstance) => buildCommandOptions(yargsInstance, cmd),
-      (argv) => handleCommand(name, cmd, argv)
+      (argv) => handleCommand(name, cmd, argv as Record<string, unknown>)
     );
   }
 
@@ -105,17 +106,43 @@ function buildCommandOptions(yargsInstance: yargs.Argv<object>, cmd: CommandDef)
     .option('input-file', { type: 'string', description: 'Read from file instead of stdin' });
 }
 
-function handleCommand(commandName: string, _cmd: CommandDef, _argv: object): void {
+function readStdin(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    process.stdin.on('data', (chunk: Buffer) => chunks.push(chunk));
+    process.stdin.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
+    process.stdin.on('error', reject);
+  });
+}
+
+async function readInput(argv: Record<string, unknown>): Promise<string> {
+  const inputFile = argv['input-file'];
+  if (typeof inputFile === 'string' && inputFile) {
+    return fs.promises.readFile(inputFile, 'utf-8');
+  }
+  return readStdin();
+}
+
+async function handleCommand(commandName: string, cmd: CommandDef, argv: Record<string, unknown>): Promise<void> {
   if (!isConfigured()) {
     console.error(NOT_CONFIGURED_MESSAGE);
     process.exit(1);
   }
-  console.error(
-    'Command execution not implemented yet (Milestone 2). Run `jig',
-    commandName,
-    '--help` for options.'
-  );
-  process.exit(0);
+  const env = loadEnv();
+  if (!env) {
+    console.error(NOT_CONFIGURED_MESSAGE);
+    process.exit(1);
+  }
+  try {
+    const input = await readInput(argv);
+    const result = await runCommand(cmd, argv, input, env);
+    process.stdout.write(result.text);
+    if (result.text && !result.text.endsWith('\n')) process.stdout.write('\n');
+    process.exit(0);
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : err);
+    process.exit(1);
+  }
 }
 
 async function main(): Promise<void> {

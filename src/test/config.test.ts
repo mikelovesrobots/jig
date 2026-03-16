@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { getJigDir, getEnvPath, isConfigured } from '../config';
+import { getJigDir, getEnvPath, isConfigured, loadEnv } from '../config';
 
 describe('config', () => {
   let tempDir: string;
@@ -87,6 +87,40 @@ describe('config', () => {
         'utf-8'
       );
       assert.strictEqual(isConfigured(), true);
+    });
+  });
+
+  describe('loadEnv', () => {
+    it('returns null when env file does not exist', () => {
+      assert.strictEqual(loadEnv(), null);
+    });
+
+    it('returns null when only one key is set', () => {
+      fs.mkdirSync(path.join(tempDir, '.jig'), { recursive: true });
+      fs.writeFileSync(getEnvPath(), 'JIG_MODEL=openai/gpt-4o\n', 'utf-8');
+      assert.strictEqual(loadEnv(), null);
+    });
+
+    it('returns both values when both keys are set', () => {
+      fs.mkdirSync(path.join(tempDir, '.jig'), { recursive: true });
+      fs.writeFileSync(
+        getEnvPath(),
+        'JIG_MODEL=anthropic/claude-3.5-sonnet\nOPENROUTER_API_KEY=sk-secret\n',
+        'utf-8'
+      );
+      const env = loadEnv();
+      assert(env !== null);
+      assert.strictEqual(env!.JIG_MODEL, 'anthropic/claude-3.5-sonnet');
+      assert.strictEqual(env!.OPENROUTER_API_KEY, 'sk-secret');
+    });
+
+    it('strips quotes from values', () => {
+      fs.mkdirSync(path.join(tempDir, '.jig'), { recursive: true });
+      fs.writeFileSync(getEnvPath(), 'JIG_MODEL="openai/gpt-4o"\nOPENROUTER_API_KEY=\'sk-x\'\n', 'utf-8');
+      const env = loadEnv();
+      assert(env !== null);
+      assert.strictEqual(env!.JIG_MODEL, 'openai/gpt-4o');
+      assert.strictEqual(env!.OPENROUTER_API_KEY, 'sk-x');
     });
   });
 });

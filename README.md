@@ -18,6 +18,8 @@ Then run commands:
 
 ```bash
 echo "I have 10 years Ruby on Rails" | jig rate --max 5 --metric "ruby on rails"
+echo "Long document here..." | jig decimate --percent 80
+echo "Text with errors..." | jig grammar-fix --percent 100
 ```
 
 ## Develop (work on jig locally)
@@ -52,7 +54,7 @@ npm i -g @mikelovesrobots/jig
 - **`jig <command> --help`** – Options for a command.
 - **`jig init`** – Configure model and API key (interactive).
 
-Input is read from stdin unless you pass `--input-file <path>`.
+Bundled commands: **rate** (score input on a metric), **decimate** (shorten to a percentage of length), **grammar-fix** (fix worst N% of grammar errors). Input is read from stdin unless you pass `--input-file <path>`.
 
 User-defined commands: add `.yaml` files under `~/.jig/commands/`. Same format as the bundled commands (YAML frontmatter + prompt body).
 
