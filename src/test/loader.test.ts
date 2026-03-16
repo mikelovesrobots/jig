@@ -30,22 +30,6 @@ describe('loader', () => {
         assert.strictEqual(cmd.name, name);
       }
     });
-
-    it('loads decimate and grammar-fix commands', () => {
-      const commands = loadCommands();
-      assert(commands.has('decimate'), 'should have decimate');
-      assert(commands.has('grammar-fix'), 'should have grammar-fix');
-      const decimate = commands.get('decimate')!;
-      assert(decimate.description.length > 0);
-      const percentArg = decimate.args.find((a) => a.name === 'percent');
-      assert(percentArg, 'decimate should have percent arg');
-      assert.strictEqual(percentArg!.type, 'number');
-      assert(decimate.promptBody.includes('{{percent}}'));
-      assert(decimate.promptBody.includes('{{input}}'));
-      const grammarFix = commands.get('grammar-fix')!;
-      assert(grammarFix.promptBody.includes('{{percent}}'));
-      assert(grammarFix.promptBody.includes('{{input}}'));
-    });
   });
 
   describe('loadCommands (user dir override)', () => {

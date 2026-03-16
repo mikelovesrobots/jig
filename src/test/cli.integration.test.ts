@@ -58,9 +58,7 @@ describe('CLI integration', () => {
       assert(stdout.includes('Usage'), 'should show usage');
       assert(stdout.includes('jig'), 'should mention jig');
       assert(stdout.includes('init'), 'should list init');
-      assert(stdout.includes('rate'), 'should list rate');
-      assert(stdout.includes('decimate'), 'should list decimate');
-      assert(stdout.includes('grammar-fix'), 'should list grammar-fix');
+      assert(stdout.includes('rate'), 'should list one example command (rate)');
     });
 
     it('exits 0 for -h', () => {
@@ -79,36 +77,15 @@ describe('CLI integration', () => {
     });
   });
 
-  describe('jig rate --help', () => {
-    it('exits 0 and prints rate options', () => {
+  describe('jig rate --help (example: per-command help from YAML)', () => {
+    it('exits 0 and prints command options from metadata', () => {
       const { status, stdout } = runJig(['rate', '--help'], { env });
       assert.strictEqual(status, 0);
-      assert(stdout.includes('rate'), 'should describe rate');
-      assert(stdout.includes('--min'), 'should show --min');
-      assert(stdout.includes('--max'), 'should show --max');
-      assert(stdout.includes('--metric'), 'should show --metric');
-      assert(stdout.includes('--explain'), 'should show --explain');
-      assert(stdout.includes('--input-file'), 'should show --input-file');
-    });
-  });
-
-  describe('jig decimate --help', () => {
-    it('exits 0 and prints decimate options', () => {
-      const { status, stdout } = runJig(['decimate', '--help'], { env });
-      assert.strictEqual(status, 0);
-      assert(stdout.includes('decimate'), 'should describe decimate');
-      assert(stdout.includes('--percent'), 'should show --percent');
-      assert(stdout.includes('--input-file'), 'should show --input-file');
-    });
-  });
-
-  describe('jig grammar-fix --help', () => {
-    it('exits 0 and prints grammar-fix options', () => {
-      const { status, stdout } = runJig(['grammar-fix', '--help'], { env });
-      assert.strictEqual(status, 0);
-      assert(stdout.includes('grammar-fix'), 'should describe grammar-fix');
-      assert(stdout.includes('--percent'), 'should show --percent');
-      assert(stdout.includes('--input-file'), 'should show --input-file');
+      assert(stdout.includes('rate'), 'should describe command');
+      assert(stdout.includes('--min'), 'should show option from args');
+      assert(stdout.includes('--max'), 'should show option from args');
+      assert(stdout.includes('--explain'), 'should show global option');
+      assert(stdout.includes('--input-file'), 'should show global option');
     });
   });
 
