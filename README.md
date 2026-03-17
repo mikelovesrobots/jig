@@ -1,6 +1,6 @@
 # jig
 
-CLI for LLM tasks via prompts and pipes. Uses OpenRouter. The philosophy is that unix chains are a great UI for llm tasks and that it should be easy to add your own prompts and commands.
+CLI for LLM tasks via prompts and pipes. The philosophy here is that unix utilities are the best example of composable and reusable tools that anyone could ever find (e.g., `ls -l | grep mike`) , so let's make using llms in a POSIX environment easy. An additional goal of the project is that adding new prompts and commands should take less than five minutes -- let's make it easy to explore!
 
 ## Synopsis
 
