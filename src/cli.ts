@@ -102,7 +102,6 @@ function buildCommandOptions(yargsInstance: yargs.Argv<object>, cmd: CommandDef)
     yargsInstance.option(arg.name, opt);
   }
   return yargsInstance
-    .option('explain', { type: 'boolean', default: false, description: 'Include a brief explanation of the output' })
     .option('input-file', { type: 'string', description: 'Read from file instead of stdin' });
 }
 

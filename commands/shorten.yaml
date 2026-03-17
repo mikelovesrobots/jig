@@ -1,16 +1,13 @@
 ---
-name: decimate
+name: shorten
 description: Shorten the input to approximately the given percentage of its current length.
 args:
   - name: percent
     type: number
     default: 80
     description: Target length as percentage of original (e.g. 80 = 80% of current length)
-  - name: input-file
-    type: file
-    description: Read from file instead of stdin
 ---
-Shorten the following content to approximately {{percent}}% of its current length.
+Shorten the following content to approximately {{target-percent}}% of its current length.
 Preserve the main ideas and tone. Output only the shortened text, no preamble.
 
 Content to shorten:

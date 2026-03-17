@@ -1,14 +1,11 @@
 ---
 name: grammar-fix
-description: Fix the worst grammar and style errors in the input. Optionally fix only a portion of errors.
+description: Fix the worst grammar and style errors in the input. Optionally fix only a portion of errors so it sounds more like you.
 args:
   - name: percent
     type: number
     default: 100
     description: Fix up to this percentage of the most egregious errors (100 = fix all)
-  - name: input-file
-    type: file
-    description: Read from file instead of stdin
 ---
 Fix the most serious grammar and style errors in the following content.
 Only fix up to the worst {{percent}}% of errors (prioritize the most egregious first).

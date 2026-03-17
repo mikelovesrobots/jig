@@ -35,14 +35,6 @@ describe('run', () => {
       assert(out.includes('quality'), 'should default metric');
     });
 
-    it('includes explain when in argv', () => {
-      const cmd: CommandDef = {
-        ...rateCommand,
-        promptBody: 'Explain: {{explain}}. Content: {{input}}',
-      };
-      const out = buildPrompt(cmd, { explain: true }, 'hi');
-      assert(out.includes('true'), 'should include explain');
-    });
   });
 
   describe('runCommand', () => {

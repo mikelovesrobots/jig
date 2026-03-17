@@ -84,7 +84,6 @@ describe('CLI integration', () => {
       assert(stdout.includes('rate'), 'should describe command');
       assert(stdout.includes('--min'), 'should show option from args');
       assert(stdout.includes('--max'), 'should show option from args');
-      assert(stdout.includes('--explain'), 'should show global option');
       assert(stdout.includes('--input-file'), 'should show global option');
     });
   });

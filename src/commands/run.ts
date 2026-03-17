@@ -16,7 +16,6 @@ function buildTemplateVars(cmd: CommandDef, argv: Record<string, unknown>, input
     if (argv[arg.name] !== undefined) vars[arg.name] = argv[arg.name];
     else if (arg.default !== undefined) vars[arg.name] = arg.default;
   }
-  if (argv.explain !== undefined) vars.explain = argv.explain;
   return vars;
 }
 
