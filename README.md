@@ -56,7 +56,7 @@ resumes/carol.md: 5
 Add a `.yaml` file under `~/.jig/commands/`. YAML frontmatter between `---` lines, then the prompt body as a Mustache template.
 
 - **Frontmatter:** `name`, `description`, and optional `args` (list of options: `name`, `type` (string/number/boolean/file), `default`, `description`).
-- **Prompt:** Use `{{input}}` for stdin/`--input-file` content and `{{argName}}` for each arg.
+- **Prompt:** Use `{{{input}}}` for stdin/`--input-file` content (triple braces avoid HTML-escaping quotes/apostrophes) and `{{argName}}` for each arg.
 
 Example `~/.jig/commands/summarize.yaml`:
 
@@ -71,7 +71,7 @@ args:
 ---
 Summarize the following in one short paragraph. Use a {{style}} tone.
 
-{{input}}
+{{{input}}}
 ```
 
 ---

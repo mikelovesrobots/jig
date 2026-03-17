@@ -11,4 +11,4 @@ Shorten the following content to approximately {{target-percent}}% of its curren
 Preserve the main ideas and tone. Output only the shortened text, no preamble.
 
 Content to shorten:
-{{input}}
+{{{input}}}

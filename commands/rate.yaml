@@ -19,4 +19,4 @@ Rate the following content from {{min}} to {{max}} on the metric "{{metric}}".
 Output only a single number in that range.
 
 Content to rate:
-{{input}}
+{{{input}}}

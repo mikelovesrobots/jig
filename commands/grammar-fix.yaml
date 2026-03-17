@@ -12,4 +12,4 @@ Only fix up to the worst {{percent}}% of errors (prioritize the most egregious f
 Preserve the author's voice and avoid over-editing. Output only the corrected text, no preamble.
 
 Content to fix:
-{{input}}
+{{{input}}}
