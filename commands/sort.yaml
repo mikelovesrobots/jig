@@ -1,0 +1,14 @@
+---
+name: sort
+description: Sorts the input by your chosen metric
+args:
+  - name: metric
+    type: string
+    default: "alphabetical"
+    description: Sort metric
+---
+Sort the following input by metric: {{{metric}}}.
+Do not return anything other than the sorted content.
+
+Content to sort:
+{{{input}}}
