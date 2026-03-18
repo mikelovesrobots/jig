@@ -1,0 +1,9 @@
+---
+name: summarize
+description: Summarizes the input
+---
+Summarize the following input.
+Do not return anything other than the summarized content.
+
+Content to summarize:
+{{{input}}}
