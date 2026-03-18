@@ -1,0 +1,8 @@
+---
+name: simplify
+description: Simplify the input.
+---
+Simplify the following content. Keep the language mostly the same, but fix the 10% worst problems.
+
+Content to simplify:
+{{{input}}}
